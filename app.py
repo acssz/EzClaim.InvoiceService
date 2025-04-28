@@ -18,15 +18,19 @@ from types import FrameType
 import http
 
 from flask import Flask, jsonify, request, abort
+from flask_migrate import Migrate
 
 from utils.logging import logger
-from config import database
+from config.settings import get_config
 from config.database import db
 
 from model import Invoice
 
 app = Flask(__name__)
-app = database.init_app(app)
+app.config.from_object(get_config())
+db.init_app(app)
+
+migrate = Migrate(app, db)
 
 
 @app.route("/")
